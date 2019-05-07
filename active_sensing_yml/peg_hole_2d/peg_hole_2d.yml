@@ -1,0 +1,33 @@
+# This yml file contains problem setup for Peg-Hole-2D simulation.
+
+model:
+  state_size: 3
+  peg_width: 1
+  peg_height: 2
+  hole_tolerance: 0.1
+  init_mean: [4, 2, 0]
+  init_cov: [2, 1, 1.57]
+  motion_cov: [0.01, 0.01, 0.01]
+  sensing_cov: 0.001
+  collision_tol: 0.001
+
+particle_filter:
+  num_particles: 100
+
+state_space_planner:
+  translation_step_size: 0.1
+  rotation_step_size: 0.1
+
+active_sensing:
+  horizon: 1
+  discount: 1.0
+  num_observation_samples: 10
+  num_nearest_neighbors: 5
+  num_cores: 8
+
+simulator:
+  num_trials: 1000
+  max_steps: 500
+  sensing_intervals: 8
+  verbosity: 0
+

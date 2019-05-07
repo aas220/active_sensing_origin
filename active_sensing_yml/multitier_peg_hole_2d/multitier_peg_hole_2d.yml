@@ -1,0 +1,46 @@
+# This yml file contains problem setup for Multi-tier Peg-Hole-2D simulation.
+
+model:
+  peg_dim: [1, 2]
+  map_dim: [-12, -12, 12, 12]  # [x_min, y_min, x_max, y_max]
+  init_mean: [0, 9, 0]
+  init_cov: [2, 1, 1.57]
+  init_seed: 0
+  motion_cov: [0.01, 0.01, 0.01]
+  motion_seed: 0
+  sensing_cov: 0.001
+  sensing_seed: 0
+  collision_tol: 1e-3
+  holes:
+    -
+      center: [4, 6]
+      tol: 0.100
+      depth: 1.0
+    -
+      center: [-4, 0]
+      tol: 0.100
+      depth: 1.0
+    -
+      center: [0, -6]
+      tol: 0.100
+      depth: 1.0
+
+particle_filter:
+  num_particles: 100
+
+state_space_planner:
+  translation_step_size: 0.1
+  rotation_step_size: 0.1
+
+active_sensing:
+  horizon: 1
+  discount: 1.0
+  num_observation_samples: 10
+  num_nearest_neighbors: 5
+  num_cores: 8
+
+simulator:
+  num_trials: 1000
+  max_steps: 1500
+  sensing_intervals: 4
+  verbosity: 0

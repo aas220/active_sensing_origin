@@ -1,0 +1,82 @@
+# This yml file contains problem setup for Capsule Robot simulation.
+
+model:
+  robot_radius: 0.1
+  init_mean: [0.5, 2.5]
+  init_cov: [0.01, 0.01]
+  motion_cov: [1e-3, 1e-3]
+  sensing_covs:
+    - [1e-4, 1e-3]
+    - [1e-3, 1e-4]
+  collision_tol: 1e-3
+  seed: 0
+  num_walls: 6
+  walls:
+    -
+      end_0: [0, 0]
+      end_1: [0, 3]
+      thickness: 0.1
+    -
+      end_0: [0, 3]
+      end_1: [5, 3]
+      thickness: 0.1
+    -
+      end_0: [5, 3]
+      end_1: [5, 0]
+      thickness: 0.1
+    -
+      end_0: [5, 0]
+      end_1: [0, 0]
+      thickness: 0.1
+    -
+      end_0: [0, 2]
+      end_1: [4, 2]
+      thickness: 0.1
+    -
+      end_0: [1, 1]
+      end_1: [5, 1]
+      thickness: 0.1
+  dt: 0.1
+  goal:
+    center: [4.5, 0.5]
+    radius: 0.2
+    axis: 0
+
+particle_filter:
+  num_particles: 100
+
+state_space_planner:
+  gain_0: 1
+  gain_1: 1
+  num_via_points: 4
+  step_size: 0.1
+  via_points:
+    -
+      center: [4.5, 2.5]
+      radius: 0.1
+      axis: 0
+    -
+      center: [4.5, 1.5]
+      radius: 0.1
+      axis: 1
+    -
+      center: [0.5, 1.5]
+      radius: 0.1
+      axis: 0
+    -
+      center: [0.5, 0.5]
+      radius: 0.1
+      axis: 1
+
+active_sensing:
+  horizon: 1
+  discount: 1.0
+  num_observation_samples: 10
+  num_nearest_neighbors: 5
+  num_cores: 4
+
+simulator:
+  num_trials: 1000
+  max_steps: 3000
+  sensing_intervals: 10
+  verbosity: 0
