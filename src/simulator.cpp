@@ -4,6 +4,10 @@
 
 #include <visualization_msgs/MarkerArray.h>
 #include "simulator.h"
+#include <iostream>
+#include <fstream>
+#include <ctime>
+#include <string>
 
 
 Simulator::Simulator(Model &model, BeliefSpacePlanner &planner, unsigned int sensing_interval) :
@@ -73,6 +77,16 @@ void Simulator::simulate(const Eigen::VectorXd &init_state, unsigned int num_ste
     std::chrono::high_resolution_clock::time_point active_sensing_finish;
     std::chrono::duration<double> active_sensing_elapsed_time;
 
+
+    /*file to save times*/
+    std::ofstream timefile;
+    std::time_t ct = std::time(0);
+    char* cc = ctime(&ct);
+    std::string filename = cc;
+    timefile.open(filename+".txt");
+    timefile << "Active sensing time output" << std::endl;
+
+
     if (verbosity > 0)
         std::cout << "state = \n" << states_.back().transpose() << std::endl;
 
@@ -86,6 +100,10 @@ void Simulator::simulate(const Eigen::VectorXd &init_state, unsigned int num_ste
         // If sensing is allowed in this step.
         if (n % (sensing_interval_ + 1) == 0)
         {
+
+            std::clock_t start;
+            double duration;
+            start = std::clock();
             // Get sensing action.
             active_sensing_start = std::chrono::high_resolution_clock::now();
             sensing_action = planner_.getSensingAction();
@@ -94,12 +112,28 @@ void Simulator::simulate(const Eigen::VectorXd &init_state, unsigned int num_ste
                     (active_sensing_finish-active_sensing_start);
             active_sensing_time += active_sensing_elapsed_time.count();
 
+            duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+            timefile << "step " << n << ", " << "request observation use time: " << duration << std::endl;
+
             // Update the belief.
+            start = std::clock();
+
             observation = model_.sampleObservation(states_.back(), sensing_action);
+
+            duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+            timefile << "step " << n << ", " << "observation send back use time: " << duration << std::endl;
+
             planner_.updateBelief(sensing_action, observation);
 
             // Predict the new belief.
+            start = std::clock();
+
             task_action = planner_.getTaskAction();
+
+            duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+            timefile << "step " << n << ", " << "update state use time: " << duration << std::endl;
+            timefile << "" << std::endl;
+
             planner_.predictBelief(task_action);
             updateSimulator(sensing_action, observation, task_action);
 
@@ -142,6 +176,8 @@ void Simulator::simulate(const Eigen::VectorXd &init_state, unsigned int num_ste
 
         n++;
     }
+
+    timefile.close();
 
     int num_sensing_steps = (n + 1) / (sensing_interval_ + 1);
 
