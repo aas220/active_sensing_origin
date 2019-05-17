@@ -1,0 +1,3 @@
+[submodule "lib/random"]
+	path = lib/random
+	url = https://github.com/tipakorng/random.git
