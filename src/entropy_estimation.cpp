@@ -2,6 +2,9 @@
 // Created by tipakorng on 11/23/15.
 //
 
+#define FLANN_USE_CUDA
+#include <flann/flann.hpp>
+
 #include <boost/math/special_functions/digamma.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 #include "entropy_estimation.h"
@@ -39,12 +42,12 @@ double estimateEntropy(const std::vector<Particle> &particles, int num_nearest_n
     vectorToFlann(particles, dataset);
     flann::Matrix<int> indices(new int[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
     flann::Matrix<double> distances(new double[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
-    flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(4));
+    flann::KDTreeCuda3dIndex<flann::L2<double> > index(dataset, flann::KDTreeCuda3dIndexParams(4));
     index.buildIndex();
     flann::SearchParams search_params;
     search_params.checks = 128;
     search_params.cores = num_cores;
-    index.knnSearch(dataset, indices, distances, num_nearest_neighbor, search_params);
+    index.knnSearchGpu(dataset, indices, distances, num_nearest_neighbor, search_params);
 
     /* Entropy calculation */
     double entropy = std::log(num_nearest_neighbor) - boost::math::digamma(num_nearest_neighbor);

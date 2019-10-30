@@ -4,6 +4,7 @@
 
 #ifndef ACTIVE_SENSING_CONTINUOUS_UTILS_H
 #define ACTIVE_SENSING_CONTINUOUS_UTILS_H
+#define FLANN_USE_CUDA
 
 #include <iostream>
 #include <vector>

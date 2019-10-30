@@ -36,6 +36,10 @@ catkin_package(
     CATKIN_DEPENDS roscpp rospy std_msgs visualization_msgs tf
 )
 
+# add gprof
+add_compile_options(-pg)
+set(catkin_LIBRARIES ${catkin_LIBRARIES} -pg)
+
 # Add subdirectories.
 add_subdirectory(lib/random)
 #add_subdirectory(lib/cwru_catheter_kinematics)
@@ -192,4 +196,4 @@ add_executable(peg_hole_3d_node src/ros_nodes/peg_hole_3d_node.cpp)
 target_link_libraries(peg_hole_3d_node ${catkin_LIBRARIES})
 
 # Add tests
-add_subdirectory(test)
+# add_subdirectory(test)
