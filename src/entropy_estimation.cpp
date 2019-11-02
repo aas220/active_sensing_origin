@@ -10,7 +10,7 @@
 #include "entropy_estimation.h"
 
 
-void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<double> &mat)
+void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<float> &mat)
 {
     double element;
 
@@ -18,7 +18,7 @@ void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<double>
     {
         for (int j = 0; j < mat.cols; j++)
         {
-            mat[i][j] = particles[i].getValue()[j];
+            mat[i][j] = (float)particles[i].getValue()[j];
             element = particles[i].getValue()[j];
         }
     }
@@ -38,11 +38,11 @@ double estimateEntropy(const std::vector<Particle> &particles, int num_nearest_n
 {
     /* Setup kd tree and find k nearest neighbors and their distances */
     int dimension = particles[0].getDimension();
-    flann::Matrix<double> dataset(new double[particles.size()*dimension], particles.size(), dimension);
+    flann::Matrix<float> dataset(new float[particles.size()*dimension], particles.size(), dimension);
     vectorToFlann(particles, dataset);
     flann::Matrix<int> indices(new int[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
-    flann::Matrix<double> distances(new double[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
-    flann::KDTreeCuda3dIndex<flann::L2<double> > index(dataset, flann::KDTreeCuda3dIndexParams(4));
+    flann::Matrix<float> distances(new float[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
+    flann::KDTreeCuda3dIndex<flann::L2<float> > index(dataset, flann::KDTreeCuda3dIndexParams(4));
     index.buildIndex();
     flann::SearchParams search_params;
     search_params.checks = 128;

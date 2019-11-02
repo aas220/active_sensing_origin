@@ -16,7 +16,7 @@
 /*
  * \brief Put positions of the particles to a FLANN matrix.
  */
-void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<double> &points);
+void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<float> &points);
 
 /*
  * \brief Calculate ball volume R^n.

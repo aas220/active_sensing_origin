@@ -56,12 +56,17 @@ include_directories(
 
 )
 
+
+## link directories
+link_directories(/usr/local/lib)
+
+
 # Add libraries
 add_library(particle_filter src/particle_filter.cpp)
 target_link_libraries(particle_filter rng pthread)
 
 add_library(entropy_estimation src/entropy_estimation.cpp)
-target_link_libraries(entropy_estimation particle_filter ${catkin_LIBRARIES})
+target_link_libraries(entropy_estimation particle_filter ${catkin_LIBRARIES} libflann_cuda.so libflann_cuda_s.a)
 
 add_library(abstract_robot_model src/models/abstract_robot_model.cpp)
 target_link_libraries(abstract_robot_model multivariate_gaussian)
