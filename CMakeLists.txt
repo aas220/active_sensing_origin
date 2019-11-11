@@ -7,6 +7,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # Find Packages.
 find_package(Eigen3 REQUIRED)
 find_package(HDF5 REQUIRED)
+find_package(CUDA REQUIRED)
+
+if(CUDA_FOUND)
+    message(STATUS "CUDA found (include: ${CUDA_INCLUDE_DIRS}, lib: ${CUDA_LIBRARIES})")
+    include_directories(${CUDA_INCLUDE_DIR})
+else(CUDA_FOUND)
+    message(FATAL_ERROR "This project requires CUDA configured with CMake")
+endif(CUDA_FOUND)
 
 if(HDF5_FOUND)
     message(Found HDF5)
@@ -59,14 +67,15 @@ include_directories(
 
 ## link directories
 link_directories(/usr/local/lib)
+link_directories(/usr/local/cuda/targets/x86_64-linux/lib)
 
 
 # Add libraries
 add_library(particle_filter src/particle_filter.cpp)
 target_link_libraries(particle_filter rng pthread)
 
-add_library(entropy_estimation src/entropy_estimation.cpp)
-target_link_libraries(entropy_estimation particle_filter ${catkin_LIBRARIES} libflann_cuda.so libflann_cuda_s.a)
+cuda_add_library(entropy_estimation src/entropy_estimation.cpp)
+target_link_libraries(entropy_estimation particle_filter ${catkin_LIBRARIES} libflann_cuda.so libflann_cuda_s.a libcudart_static.a)
 
 add_library(abstract_robot_model src/models/abstract_robot_model.cpp)
 target_link_libraries(abstract_robot_model multivariate_gaussian)
@@ -130,18 +139,6 @@ add_library(multitier_peg_hole_2d_planner src/planners/multitier_peg_hole_2d_pla
 
 add_library(capsule_robot_planner src/planners/capsule_robot_planner.cpp)
 
-add_executable(abstract_robot_sim src/problems/abstract_robot_sim.cpp)
-target_link_libraries(
-        abstract_robot_sim
-        abstract_robot_model
-        potential_field
-        simulator
-        particle_filter
-        entropy_estimation
-        active_sensing
-        ${HDF_LIBRARIES}
-)
-
 add_executable(peg_hole_2d_sim src/problems/peg_hole_2d_sim.cpp)
 target_link_libraries(
         peg_hole_2d_sim
@@ -153,6 +150,19 @@ target_link_libraries(
         active_sensing
         ${HDF_LIBRARIES}
         ${YAMLCPP_LIBRARY}
+        libcudart_static.a
+)
+#[[
+add_executable(abstract_robot_sim src/problems/abstract_robot_sim.cpp)
+target_link_libraries(
+        abstract_robot_sim
+        abstract_robot_model
+        potential_field
+        simulator
+        particle_filter
+        entropy_estimation
+        active_sensing
+        ${HDF_LIBRARIES}
 )
 
 add_executable(peg_hole_3d_sim src/problems/peg_hole_3d_sim.cpp)
@@ -199,6 +209,6 @@ target_link_libraries(
 
 add_executable(peg_hole_3d_node src/ros_nodes/peg_hole_3d_node.cpp)
 target_link_libraries(peg_hole_3d_node ${catkin_LIBRARIES})
-
+]]
 # Add tests
 # add_subdirectory(test)
