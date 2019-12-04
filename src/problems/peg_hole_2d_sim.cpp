@@ -186,11 +186,11 @@ int main(int argc, char** argv)
     file << std::endl;
 
     // Run random active sensing simulation.
-    std::cout << "Running random active sensing simulations..." << std::endl;
-    file << "Random Active Sensing Simulations" << std::endl;
-    simulate(random_simulator, model, num_trials, max_steps, file, verbosity);
-    std::cout << "Finished random active sensing simulations." << std::endl << std::endl;
-    file << std::endl;
+    // std::cout << "Running random active sensing simulations..." << std::endl;
+    // file << "Random Active Sensing Simulations" << std::endl;
+    // simulate(random_simulator, model, num_trials, max_steps, file, verbosity);
+    // std::cout << "Finished random active sensing simulations." << std::endl << std::endl;
+    // file << std::endl;
 
     // Run state-entropy active sensing simulation.
     std::cout << "Running state-entropy active sensing simulations..." << std::endl;
@@ -200,11 +200,11 @@ int main(int argc, char** argv)
     file << std::endl;
 
     // Run action-entropy active sensing simulation.
-    std::cout << "Running action-entropy active sensing simulations..." << std::endl;
-    file << "Action-Entropy Active Sensing Simulations" << std::endl;
-    simulate(action_entropy_simulator, model, num_trials, max_steps, file, verbosity);
-    std::cout << "Finished action-entropy active sensing simulations." << std::endl << std::endl;
-    file << std::endl;
+    // std::cout << "Running action-entropy active sensing simulations..." << std::endl;
+    // file << "Action-Entropy Active Sensing Simulations" << std::endl;
+    // simulate(action_entropy_simulator, model, num_trials, max_steps, file, verbosity);
+    // std::cout << "Finished action-entropy active sensing simulations." << std::endl << std::endl;
+    // file << std::endl;
 
     // Close the output file.
     file.close();
