@@ -20,8 +20,8 @@ sudo make install
 # Install HDF5 headers.
 sudo apt-get install libhdf5-dev
 
-# Install random
-cd $cwd
-mkdir lib
-cd lib
-git clone https://github.com/tipakorng/random.git
+# # Install random
+# cd $cwd
+# mkdir lib
+# cd lib
+# git clone https://github.com/tipakorng/random.git
