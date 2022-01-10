@@ -4,7 +4,6 @@
 
 #ifndef ACTIVE_SENSING_CONTINUOUS_UTILS_H
 #define ACTIVE_SENSING_CONTINUOUS_UTILS_H
-#define FLANN_USE_CUDA
 
 #include <iostream>
 #include <vector>
@@ -12,11 +11,10 @@
 #include <flann/io/hdf5.h>
 #include <math_utils.h>
 #include "particle_filter.h"
-
 /*
  * \brief Put positions of the particles to a FLANN matrix.
  */
-void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<float> &points);
+void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<double> &points);
 
 /*
  * \brief Calculate ball volume R^n.

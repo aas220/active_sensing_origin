@@ -2,15 +2,12 @@
 // Created by tipakorng on 11/23/15.
 //
 
-#define FLANN_USE_CUDA
-#include <flann/flann.hpp>
-
 #include <boost/math/special_functions/digamma.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 #include "entropy_estimation.h"
 
 
-void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<float> &mat)
+void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<double> &mat)
 {
     double element;
 
@@ -18,7 +15,7 @@ void vectorToFlann(const std::vector<Particle> &particles, flann::Matrix<float> 
     {
         for (int j = 0; j < mat.cols; j++)
         {
-            mat[i][j] = (float)particles[i].getValue()[j];
+            mat[i][j] = particles[i].getValue()[j];
             element = particles[i].getValue()[j];
         }
     }
@@ -38,16 +35,16 @@ double estimateEntropy(const std::vector<Particle> &particles, int num_nearest_n
 {
     /* Setup kd tree and find k nearest neighbors and their distances */
     int dimension = particles[0].getDimension();
-    flann::Matrix<float> dataset(new float[particles.size()*dimension], particles.size(), dimension);
+    flann::Matrix<double> dataset(new double[particles.size()*dimension], particles.size(), dimension);
     vectorToFlann(particles, dataset);
     flann::Matrix<int> indices(new int[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
-    flann::Matrix<float> distances(new float[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
-    flann::KDTreeCuda3dIndex<flann::L2<float> > index(dataset, flann::KDTreeCuda3dIndexParams(4));
+    flann::Matrix<double> distances(new double[dataset.rows * num_nearest_neighbor], dataset.rows, num_nearest_neighbor);
+    flann::Index<flann::L2<double> > index(dataset, flann::KDTreeIndexParams(4));
     index.buildIndex();
     flann::SearchParams search_params;
     search_params.checks = 128;
     search_params.cores = num_cores;
-    index.knnSearchGpu(dataset, indices, distances, num_nearest_neighbor, search_params);
+    index.knnSearch(dataset, indices, distances, num_nearest_neighbor, search_params);
 
     /* Entropy calculation */
     double entropy = std::log(num_nearest_neighbor) - boost::math::digamma(num_nearest_neighbor);

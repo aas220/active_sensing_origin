@@ -1,20 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 project(active_sensing_continuous)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Lusr/x86_64-linux-gnuliblz4.so,-Llz4, -std=c++11")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # Find Packages.
 find_package(Eigen3 REQUIRED)
 find_package(HDF5 REQUIRED)
-find_package(CUDA REQUIRED)
-
-if(CUDA_FOUND)
-    message(STATUS "CUDA found (include: ${CUDA_INCLUDE_DIRS}, lib: ${CUDA_LIBRARIES})")
-    include_directories(${CUDA_INCLUDE_DIR})
-else(CUDA_FOUND)
-    message(FATAL_ERROR "This project requires CUDA configured with CMake")
-endif(CUDA_FOUND)
 
 if(HDF5_FOUND)
     message(Found HDF5)
@@ -34,7 +26,6 @@ if(OPENMP_FOUND)
 endif()
 
 #find_package(fcl REQUIRED)
-
 find_package(Boost COMPONENTS filesystem system REQUIRED)
 find_package(Threads REQUIRED)
 find_package(YamlCpp REQUIRED)
@@ -44,10 +35,6 @@ catkin_package(
     CATKIN_DEPENDS roscpp rospy std_msgs visualization_msgs tf
 )
 
-# add gprof
-add_compile_options(-pg)
-set(catkin_LIBRARIES ${catkin_LIBRARIES} -pg)
-
 # Add subdirectories.
 add_subdirectory(lib/random)
 #add_subdirectory(lib/cwru_catheter_kinematics)
@@ -56,6 +43,7 @@ add_subdirectory(lib/random)
 include_directories(
         include
         lib/random/include
+	lib/flann/include
         ${catkin_INCLUDE_DIRS}
         ${EIGEN3_INCLUDE_DIR}
         ${fcl_INCLUDE_DIR}
@@ -64,18 +52,12 @@ include_directories(
 
 )
 
-
-## link directories
-link_directories(/usr/local/lib)
-link_directories(/usr/local/cuda/targets/x86_64-linux/lib)
-
-
 # Add libraries
 add_library(particle_filter src/particle_filter.cpp)
 target_link_libraries(particle_filter rng pthread)
 
-cuda_add_library(entropy_estimation src/entropy_estimation.cpp)
-target_link_libraries(entropy_estimation particle_filter ${catkin_LIBRARIES} libflann_cuda.so libflann_cuda_s.a libcudart_static.a)
+add_library(entropy_estimation src/entropy_estimation.cpp)
+target_link_libraries(entropy_estimation particle_filter ${catkin_LIBRARIES})
 
 add_library(abstract_robot_model src/models/abstract_robot_model.cpp)
 target_link_libraries(abstract_robot_model multivariate_gaussian)
@@ -139,20 +121,6 @@ add_library(multitier_peg_hole_2d_planner src/planners/multitier_peg_hole_2d_pla
 
 add_library(capsule_robot_planner src/planners/capsule_robot_planner.cpp)
 
-add_executable(peg_hole_2d_sim src/problems/peg_hole_2d_sim.cpp)
-target_link_libraries(
-        peg_hole_2d_sim
-        peg_hole_2d_model
-        peg_hole_2d_planner
-        simulator
-        particle_filter
-        entropy_estimation
-        active_sensing
-        ${HDF_LIBRARIES}
-        ${YAMLCPP_LIBRARY}
-        libcudart_static.a
-)
-#[[
 add_executable(abstract_robot_sim src/problems/abstract_robot_sim.cpp)
 target_link_libraries(
         abstract_robot_sim
@@ -163,6 +131,20 @@ target_link_libraries(
         entropy_estimation
         active_sensing
         ${HDF_LIBRARIES}
+)
+
+add_executable(peg_hole_2d_sim src/problems/peg_hole_2d_sim.cpp)
+target_link_libraries(
+        peg_hole_2d_sim
+        peg_hole_2d_model
+        peg_hole_2d_planner
+        simulator
+        particle_filter
+        entropy_estimation
+        active_sensing
+        ${HDF_LIBRARIES}
+	${catkin_LIBRARIES}
+        ${YAMLCPP_LIBRARY}
 )
 
 add_executable(peg_hole_3d_sim src/problems/peg_hole_3d_sim.cpp)
@@ -209,6 +191,6 @@ target_link_libraries(
 
 add_executable(peg_hole_3d_node src/ros_nodes/peg_hole_3d_node.cpp)
 target_link_libraries(peg_hole_3d_node ${catkin_LIBRARIES})
-]]
+
 # Add tests
-# add_subdirectory(test)
+add_subdirectory(test)

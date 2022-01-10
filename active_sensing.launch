@@ -1,4 +1,0 @@
-<launch>
-    <env name="GMON_OUT_PREFIX" value="peg_hole_2d_sim" />
-    <node name="peg_hole_2d_sim" pkg="active_sensing_continuous" type="peg_hole_2d_sim" output="screen" args="/home/user/old_ws/src/active_sensing_origin/active_sensing_yml/peg_hole_2d/peg_hole_2d.yml out." />
-</launch>

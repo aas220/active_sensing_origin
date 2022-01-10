@@ -11,7 +11,7 @@
 #include "particle_filter.h"
 #include "multivariate_gaussian.h"
 #include "rng.h"
-
+#include <lz4.h>
 using std::vector;
 
 TEST(test_utils, test_vector2matrix)

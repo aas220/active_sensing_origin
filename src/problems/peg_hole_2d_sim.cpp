@@ -37,15 +37,9 @@ void simulate(Simulator &simulator, Model &model, unsigned int num_trials, unsig
         std::cout << ", goal reached = " << model.isGoal(simulator.getStates().back()) << std::endl;
 
         // Print to file.
-        file << "trial " << i << ", reward = " << simulator.getCumulativeReward()<<", \n";
-        file << "sensing time = " << simulator.getAverageActiveSensingTime()<<", \n";
-        file << "observation time = "<<simulator.getAvgObservationTime()<<", \n";
-        file << "update belief time = "<<simulator.getAvgUpdatebeliefTime()<<", \n";
-	file << "total update belief time = "<<simulator.getAvgTotalUpdatebeliefTime()<<", \n";
-	file << "task action time = "<<simulator.getAvgTaskactionTime()<<", \n";
-	file << "predict belief time = "<<simulator.getAvgPredictbeliefTime()<<", \n";
-	file << "total predict belief time = "<<simulator.getAvgTotalPredictbeliefTime()<<", \n";
-        file << "goal reached = " << model.isGoal(simulator.getStates().back()) << std::endl;
+        file << "trial " << i << ", reward = " << simulator.getCumulativeReward();
+        file << ", sensing time = " << simulator.getAverageActiveSensingTime();
+        file << ", goal reached = " << model.isGoal(simulator.getStates().back()) << std::endl;
 
         if (model.isGoal(simulator.getStates().back()))
         {
@@ -186,11 +180,11 @@ int main(int argc, char** argv)
     file << std::endl;
 
     // Run random active sensing simulation.
-    // std::cout << "Running random active sensing simulations..." << std::endl;
-    // file << "Random Active Sensing Simulations" << std::endl;
-    // simulate(random_simulator, model, num_trials, max_steps, file, verbosity);
-    // std::cout << "Finished random active sensing simulations." << std::endl << std::endl;
-    // file << std::endl;
+    std::cout << "Running random active sensing simulations..." << std::endl;
+    file << "Random Active Sensing Simulations" << std::endl;
+    simulate(random_simulator, model, num_trials, max_steps, file, verbosity);
+    std::cout << "Finished random active sensing simulations." << std::endl << std::endl;
+    file << std::endl;
 
     // Run state-entropy active sensing simulation.
     std::cout << "Running state-entropy active sensing simulations..." << std::endl;
@@ -200,11 +194,11 @@ int main(int argc, char** argv)
     file << std::endl;
 
     // Run action-entropy active sensing simulation.
-    // std::cout << "Running action-entropy active sensing simulations..." << std::endl;
-    // file << "Action-Entropy Active Sensing Simulations" << std::endl;
-    // simulate(action_entropy_simulator, model, num_trials, max_steps, file, verbosity);
-    // std::cout << "Finished action-entropy active sensing simulations." << std::endl << std::endl;
-    // file << std::endl;
+    std::cout << "Running action-entropy active sensing simulations..." << std::endl;
+    file << "Action-Entropy Active Sensing Simulations" << std::endl;
+    simulate(action_entropy_simulator, model, num_trials, max_steps, file, verbosity);
+    std::cout << "Finished action-entropy active sensing simulations." << std::endl << std::endl;
+    file << std::endl;
 
     // Close the output file.
     file.close();
