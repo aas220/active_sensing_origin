@@ -38,7 +38,7 @@ endif()
 find_package(Boost COMPONENTS filesystem system REQUIRED)
 find_package(Threads REQUIRED)
 find_package(YamlCpp REQUIRED)
-find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs visualization_msgs tf)
+find_package(catkin REQUIRED COMPONENTS roslz4 roscpp rospy std_msgs visualization_msgs tf)
 
 catkin_package(
     CATKIN_DEPENDS roscpp rospy std_msgs visualization_msgs tf
