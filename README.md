@@ -1,10 +1,16 @@
 # Active Sensing in Continuous Space
 
+##How to run docker container
+-Copy Dockerfile to a layer outside of catkin workspace
+-Run docker build -t <desired name> .
+-May need sudo to run docker build depending on system permissions
+
 ## Dependencies
 - FCL
 - HDF5
 - FLANN
 - https://github.com/tipakorng/random.git
+-added roslz4 in catkin dependencies (does not run without this)
 
 ## Some changes have been made in order to run this package in Ubuntu 16.04 ros-kinetic
 
