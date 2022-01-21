@@ -1,0 +1,6 @@
+FROM ros:noetic 
+MAINTAINER Lexi Scott aas220@case.edu
+RUN sudo apt-get -y update
+RUN sudo apt-get -y upgrade
+CMD roscore
+

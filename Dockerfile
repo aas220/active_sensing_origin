@@ -15,4 +15,4 @@ RUN sudo ln -s /usr/lib/x86_64-linux-gnu/hdf5/serial/libhdf5_hl.so /usr/lib/libh
 COPY . .
 WORKDIR "/catkin_ws"
 RUN /bin/bash -c ' . /opt/ros/noetic/setup.bash ; catkin_make'
-
+#CMD rosrun active_sensing_continuous peg_hole_2d_sim src/active_sensing_origin/active_sensing_yml/peg_hole_2d/peg_hole_2d/yml outputfile.txt
