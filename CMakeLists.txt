@@ -29,10 +29,26 @@ endif()
 find_package(Boost COMPONENTS filesystem system REQUIRED)
 find_package(Threads REQUIRED)
 find_package(YamlCpp REQUIRED)
-find_package(catkin REQUIRED COMPONENTS roslz4 roscpp rospy std_msgs visualization_msgs tf)
+find_package(catkin REQUIRED COMPONENTS roslz4 roscpp rospy std_msgs message_generation visualization_msgs tf)
+
+#add message files
+add_message_files(
+	 FILES
+	ObsrvBack.msg
+	ReqObsrv.msg
+				        UpdateInfo.msg)
+
+				add_service_files(
+					 FILES
+					  action_message.srv
+					   )
+				   generate_messages(
+					           DEPENDENCIES
+						           std_msgs
+							                                   )
 
 catkin_package(
-    CATKIN_DEPENDS roscpp rospy std_msgs visualization_msgs tf
+    CATKIN_DEPENDS roscpp rospy std_msgs visualization_msgs tf message_runtime
 )
 
 # Add subdirectories.
@@ -52,7 +68,7 @@ include_directories(
 
 )
 
-# Add libraries
+	# Add libraries
 add_library(particle_filter src/particle_filter.cpp)
 target_link_libraries(particle_filter rng pthread)
 
@@ -102,7 +118,6 @@ target_link_libraries(
         ${Boost_SYSTEM_LIBRARY}
         ${catkin_LIBRARIES}
 )
-
 add_library(capsule_robot_model src/models/capsule_robot_model.cpp)
 target_link_libraries(
         capsule_robot_model
