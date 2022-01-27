@@ -34,6 +34,7 @@ find_package(catkin REQUIRED COMPONENTS roslz4 roscpp rospy std_msgs message_gen
 #add message files
 add_message_files(
 	 FILES
+	 CT.msg
 	ObsrvBack.msg
 	ReqObsrv.msg
 				        UpdateInfo.msg)
